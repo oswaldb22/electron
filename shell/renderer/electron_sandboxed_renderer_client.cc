@@ -243,7 +243,7 @@ void ElectronSandboxedRendererClient::SetupMainWorldOverrides(
     return;
 
   // Setup window overrides in the main world context
-  // Wrap the bundle into a function that receives the isolatedWorld as
+  // Wrap the bundle into a function that receives the nodeProcess as
   // an argument.
   auto* isolate = context->GetIsolate();
 
@@ -251,12 +251,10 @@ void ElectronSandboxedRendererClient::SetupMainWorldOverrides(
   process.SetMethod("_linkedBinding", GetBinding);
 
   std::vector<v8::Local<v8::String>> isolated_bundle_params = {
-      node::FIXED_ONE_BYTE_STRING(isolate, "nodeProcess"),
-      node::FIXED_ONE_BYTE_STRING(isolate, "isolatedWorld")};
+      node::FIXED_ONE_BYTE_STRING(isolate, "nodeProcess")};
 
   std::vector<v8::Local<v8::Value>> isolated_bundle_args = {
-      process.GetHandle(),
-      GetContext(render_frame->GetWebFrame(), isolate)->Global()};
+      process.GetHandle()};
 
   util::CompileAndCall(context, "electron/js2c/isolated_bundle",
                        &isolated_bundle_params, &isolated_bundle_args, nullptr);

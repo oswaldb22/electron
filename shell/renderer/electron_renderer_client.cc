@@ -217,19 +217,17 @@ void ElectronRendererClient::SetupMainWorldOverrides(
   if (!prefs.webview_tag)
     return;
   // Setup window overrides in the main world context
-  // Wrap the bundle into a function that receives the isolatedWorld as
+  // Wrap the bundle into a function that receives the nodeProcess as
   // an argument.
   auto* isolate = context->GetIsolate();
   std::vector<v8::Local<v8::String>> isolated_bundle_params = {
-      node::FIXED_ONE_BYTE_STRING(isolate, "nodeProcess"),
-      node::FIXED_ONE_BYTE_STRING(isolate, "isolatedWorld")};
+      node::FIXED_ONE_BYTE_STRING(isolate, "nodeProcess")};
 
   auto* env = GetEnvironment(render_frame);
   DCHECK(env);
 
   std::vector<v8::Local<v8::Value>> isolated_bundle_args = {
-      env->process_object(),
-      GetContext(render_frame->GetWebFrame(), isolate)->Global()};
+      env->process_object()};
 
   util::CompileAndCall(context, "electron/js2c/isolated_bundle",
                        &isolated_bundle_params, &isolated_bundle_args, nullptr);

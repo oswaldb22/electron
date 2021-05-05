@@ -483,11 +483,8 @@ bool RendererClientBase::IsWebViewFrame(
 
   gin_helper::Dictionary frame_element_dict(isolate, frame_element);
 
-  v8::Local<v8::Object> internal;
-  if (!frame_element_dict.GetHidden("internal", &internal))
-    return false;
-
-  return !internal.IsEmpty();
+  bool internal = false;
+  return frame_element_dict.GetHidden("internal", &internal) && internal;
 }
 
 }  // namespace electron
